@@ -7,3 +7,5 @@ Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\bin\Release\XpdlValidator.p
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.exe
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.pdb
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.csprojResolveAssemblyReference.cache
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.View.Inicio.resources
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.View.XpdlErrorViewer.resources

@@ -40,49 +40,49 @@ namespace XpdlValidator
 
                 foreach (XElement nodeActivity in activities)
                 {
-                    Activity activity = getActivity(nodeActivity, documentoXpdl.Root.Descendants(), idPool, namePool, proccessId);
+                    //Activity activity = getActivity(nodeActivity, documentoXpdl.Root.Descendants(), idPool, namePool, proccessId);
                 }
             }
         }
 
-        public Activity getActivity(XElement nodeActivity, IEnumerable<XElement> elementsXpdl,string idPool,string namePool,string proccessId)
-        {
-            Activity  activity;
-            string idActivity = nodeActivity.Attribute("Id").Value;
-            string nameActivity = nodeActivity.Attribute("Name").Value;
+        //public Activity getActivity(XElement nodeActivity, IEnumerable<XElement> elementsXpdl,string idPool,string namePool,string proccessId)
+        //{
+        //    Activity  activity;
+        //    string idActivity = nodeActivity.Attribute("Id").Value;
+        //    string nameActivity = nodeActivity.Attribute("Name").Value;
             
-            List<string> typesActivities = new List<string>() { "Implementation", "Event"};
+        //    List<string> typesActivities = new List<string>() { "Implementation", "Event"};
 
-            IEnumerable<XElement> typeActivity = from tipo in nodeActivity.Elements()
-                                                  where typesActivities.Contains((string)tipo.Name.LocalName)
-                                                  select tipo;
+        //    IEnumerable<XElement> typeActivity = from tipo in nodeActivity.Elements()
+        //                                          where typesActivities.Contains((string)tipo.Name.LocalName)
+        //                                          select tipo;
 
-            if (typeActivity.First().Name.LocalName == "Event")
-            {
-                List<string> typesEvents = new List<string>() { "StartEvent", "IntermediateEvent","EndEvent"};
+        //    if (typeActivity.First().Name.LocalName == "Event")
+        //    {
+        //        List<string> typesEvents = new List<string>() { "StartEvent", "IntermediateEvent","EndEvent"};
 
-                IEnumerable<XElement> typeEvent = from tipo in typeActivity.Elements()
-                                                  where typesEvents.Contains((string)tipo.Name.LocalName)
-                                                  select tipo;
-                if (typeEvent.First().Name.LocalName == "StartEvent")
-                {
-                    activity = new StartEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
-                }
-                else if (typeEvent.First().Name.LocalName == "IntermediateEvent")
-                {
-                    activity = new IntermediateEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
-                } else
-	            {
-                    activity = new EndEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
-	            }
-            }
-            else
-            {
-                activity = new TaskEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
-            }
+        //        IEnumerable<XElement> typeEvent = from tipo in typeActivity.Elements()
+        //                                          where typesEvents.Contains((string)tipo.Name.LocalName)
+        //                                          select tipo;
+        //        if (typeEvent.First().Name.LocalName == "StartEvent")
+        //        {
+        //            activity = new StartEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
+        //        }
+        //        else if (typeEvent.First().Name.LocalName == "IntermediateEvent")
+        //        {
+        //            activity = new IntermediateEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
+        //        } else
+        //        {
+        //            activity = new EndEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        activity = new TaskEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
+        //    }
 
-            return activity;
-        }
+        //    return activity;
+        //}
 
     }
 }

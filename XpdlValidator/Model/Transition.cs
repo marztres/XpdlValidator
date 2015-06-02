@@ -32,7 +32,7 @@ namespace XpdlValidator.Model
         }
         public XElement elementTransition { get; set; } //XElement de la transición.
 
-        Transition(XElement elementTransition) 
+        public Transition(XElement elementTransition) 
         {
             this.elementTransition = elementTransition;
         }
