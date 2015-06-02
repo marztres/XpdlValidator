@@ -1,0 +1,9 @@
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\bin\Debug\XpdlValidator.exe.config
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\bin\Debug\XpdlValidator.exe
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\bin\Debug\XpdlValidator.pdb
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Debug\XpdlValidator.csprojResolveAssemblyReference.cache
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Debug\XpdlValidator.Form1.resources
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Debug\XpdlValidator.Properties.Resources.resources
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Debug\XpdlValidator.csproj.GenerateResource.Cache
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Debug\XpdlValidator.exe
+Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Debug\XpdlValidator.pdb
