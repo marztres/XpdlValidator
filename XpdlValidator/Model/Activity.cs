@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace XpdlValidator.Model
@@ -41,5 +42,21 @@ namespace XpdlValidator.Model
         }
         
         public abstract void validate();
+
+        protected virtual void hasOutgoinSecuenceFlow() 
+        {
+            IEnumerable<Transition> outSecuenceFlow = transitions.Where(X=> X.from == this.id);
+
+            if (outSecuenceFlow.Count() >= 0)
+            {
+                if (String.IsNullOrEmpty(outSecuenceFlow.First().to))
+                    MessageBox.Show("La secuencia de salida no esta conectada con otro elemento.");
+            }
+            else
+            {
+                MessageBox.Show("No existe una secuencia de salida.");
+            }
+        }
+
     }
 }

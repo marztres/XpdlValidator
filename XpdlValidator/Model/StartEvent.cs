@@ -16,6 +16,8 @@ namespace XpdlValidator.Model
 
         public override void validate() 
         {
+            base.hasOutgoinSecuenceFlow();
+            
         }
 
     }

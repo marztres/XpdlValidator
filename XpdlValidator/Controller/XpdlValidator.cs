@@ -23,6 +23,7 @@ namespace XpdlValidator.Controller
             {
                 Activity activity = getActivity(xElementActivity, xmlXDocument, transitions, activities);
                 activities.Add(activity);
+                activity.validate();
             }
 
         }
