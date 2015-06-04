@@ -33,30 +33,53 @@ namespace XpdlValidator.Model
                                   }
         public IEnumerable<Transition> transitions { get; set; }
         public IEnumerable<Activity> activities { get; set; }
+        public string typeActivity { get; set; }
 
-        public Activity(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Activity> activities)
+        public Activity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Activity> activities)
         {
-            this.xElementActivity = elementActivity;
+            this.xElementActivity = xElementActivity;
             this.xmlXDocument = xmlXDocument;
             this.activities = activities;
         }
         
-        public abstract void validate();
+        public abstract List<RuleException> validate();
 
-        protected virtual void hasOutgoinSecuenceFlow() 
+        protected virtual Boolean hasOutgoinSecuenceFlow() 
         {
             IEnumerable<Transition> outSecuenceFlow = transitions.Where(X=> X.from == this.id);
 
-            if (outSecuenceFlow.Count() >= 0)
+            if (outSecuenceFlow.Count() != 0)
             {
-                if (String.IsNullOrEmpty(outSecuenceFlow.First().to))
-                    MessageBox.Show("La secuencia de salida no esta conectada con otro elemento.");
+                return true;
             }
             else
             {
-                MessageBox.Show("No existe una secuencia de salida.");
+                return false;               
             }
         }
 
+        protected virtual Boolean hasIncomingSecuenceFlow()
+        {
+            IEnumerable<Transition> incomingSecuenceFlow = transitions.Where(X => X.to == this.id);
+
+            if (incomingSecuenceFlow.Count() == 0)
+                return false;
+            else
+                return true;
+        }
+
+        protected Boolean existStartOrEndEvent()
+        {
+            IEnumerable<Activity> startOrEndEvent = this.activities.Where(X => X.GetType() == typeof(StartEvent) || X.GetType() == typeof(EndEvent));
+
+            if (startOrEndEvent.Count() != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

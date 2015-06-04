@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml.Linq;
+using System.Xml;
 
 namespace XpdlValidator.View
 {
@@ -55,6 +56,9 @@ namespace XpdlValidator.View
 
                     using (XpdlErrorViewer frmConfiguracion = new XpdlErrorViewer(xmlXDocument))
                     {
+                        txtWelcomeMessage.Text = "Bienvenidos a XPDL VALIDATOR, pulsa el botón 'Buscar archivo' para selecionar un archivo .XPDL y despues pulsa 'Cargar archivo .XPDL' para validarlo.";
+                        txtWelcomeMessage.BackColor = Color.WhiteSmoke;
+
                         frmConfiguracion.ShowDialog();
                         Show();
                     }
@@ -62,9 +66,11 @@ namespace XpdlValidator.View
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error al cargar archivo XPDL detalle : " + ex.Message);
+                    txtWelcomeMessage.Text = "Error al cargar el archivo .XPDL, detalle error : " + ex.Message;
+                    txtWelcomeMessage.BackColor = Color.FromArgb(255, 192, 192);
                 }
             }
         }
+
     }
 }

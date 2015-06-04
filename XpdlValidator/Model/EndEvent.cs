@@ -12,10 +12,17 @@ namespace XpdlValidator.Model
         public EndEvent(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
             : base(xElementActivity, xmlXDocument, transitions,activities)
         {
+            this.typeActivity = "EndEvent";
         }
 
-        public override void validate()
+        public override List<RuleException> validate()
         {
+            List<RuleException> rulesExceptions = new List<RuleException>();
+
+            if (!(base.hasIncomingSecuenceFlow()))
+                rulesExceptions.Add(new RuleException("End event must have an incoming sequence flow.", xElementActivity, xmlXDocument,typeActivity));
+
+            return rulesExceptions;
         }
 
     }

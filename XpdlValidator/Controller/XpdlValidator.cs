@@ -7,28 +7,42 @@ using System.Xml.Linq;
 using XpdlValidator.Model;
 
 
+
 namespace XpdlValidator.Controller
 {
     public class ValidatorXpdl
     {
+        public List<RuleException> rulesExceptions  = new List<RuleException>();
+
         public ValidatorXpdl(XDocument xmlXDocument) 
         {
+            
             XNamespace  XDocumentNameSpace = xmlXDocument.Root.GetDefaultNamespace();
 
             IEnumerable<XElement> xElementActivities = from activity in xmlXDocument.Root.Descendants(XDocumentNameSpace + "Activity") select activity;
             IEnumerable<Transition> transitions = from transition in xmlXDocument.Root.Descendants(XDocumentNameSpace + "Transition") select new Transition((XElement)transition) ;
+            IEnumerable<MessageFlow> flowMessages = from messageFlow in xmlXDocument.Root.Descendants(XDocumentNameSpace + "MessageFlow") select new MessageFlow((XElement)messageFlow);
             List<Activity> activities = new List<Activity>();
 
             foreach (XElement xElementActivity in xElementActivities)
             {
-                Activity activity = getActivity(xElementActivity, xmlXDocument, transitions, activities);
+                Activity activity = getActivity(xElementActivity, xmlXDocument, transitions, activities, flowMessages);
                 activities.Add(activity);
-                activity.validate();
+            }
+
+            foreach (Activity activity in activities)
+            {
+                List<RuleException> validationExceptions = activity.validate();
+
+                foreach (RuleException ruleException in validationExceptions)
+                {
+                    rulesExceptions.Add(ruleException);
+                }
             }
 
         }
 
-        public Activity getActivity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
+        public Activity getActivity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities, IEnumerable<MessageFlow> flowMessages)
         {
             Activity activity;
             
@@ -51,7 +65,7 @@ namespace XpdlValidator.Controller
                 }
                 else if (typeEvent.First().Name.LocalName == "IntermediateEvent")
                 {
-                    return activity = new IntermediateEvent(xElementActivity, xmlXDocument, transitions,activities);
+                    return activity = new IntermediateEvent(xElementActivity, xmlXDocument, transitions,activities,flowMessages);
                 }
                 else
                 {
@@ -63,9 +77,6 @@ namespace XpdlValidator.Controller
                 return activity = new TaskEvent(xElementActivity, xmlXDocument, transitions, activities);
             }
         }
-
-
-
 
     }
 }

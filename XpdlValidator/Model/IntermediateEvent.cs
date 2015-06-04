@@ -18,19 +18,36 @@ namespace XpdlValidator.Model
                                     }
                                 }
         public Boolean isThrow = false;
+        public IEnumerable<MessageFlow> flowMessages { get; set; }
 
-        public IntermediateEvent(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
+        public IntermediateEvent(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities, IEnumerable<MessageFlow> flowMessages)
             : base(xElementActivity, xmlXDocument, transitions,activities)
             {
                 getAtributesByType();
+                this.flowMessages = flowMessages;
+                this.typeActivity = "IntermediateEvent";
             }
 
-            public override void validate()
+            public override List<RuleException> validate()
             {
+                List<RuleException> rulesExceptions = new List<RuleException>();
+
+                if (base.existStartOrEndEvent())
+                    if (!(base.hasOutgoinSecuenceFlow()))
+                        rulesExceptions.Add(new RuleException("This intermediate event should have an outgoing sequence flow", xElementActivity, xmlXDocument, typeActivity));
+
                 if (isThrow && String.IsNullOrEmpty(this.name))
-                {
-                    MessageBox.Show(" No cumple la regla Style 0115. nombre : " + this.xElementName);
-                }
+                    rulesExceptions.Add(new RuleException(" A throwing intermediate event should be labeled.", xElementActivity, xmlXDocument, typeActivity));
+
+                if (typeEvent == "Message" && !isThrow)
+                    if (!(hasIncomingMessageFlow()))
+                        rulesExceptions.Add(new RuleException(" A catching Message event should have incoming message flow.", xElementActivity, xmlXDocument, typeActivity));
+
+                if (typeEvent == "Message" && isThrow)
+                    if (!(hasOutgoingMessageFlow()))
+                        rulesExceptions.Add(new RuleException(" A throwing Message event should have outgoing message flow.", xElementActivity, xmlXDocument, typeActivity));
+
+                return rulesExceptions;
             }
 
             protected void getAtributesByType() 
@@ -38,10 +55,27 @@ namespace XpdlValidator.Model
                 if (xElementActivity.Descendants().Where(X => X.Name.LocalName == "TriggerResultMessage").Count() != 0)
                     if (xElementActivity.Descendants().Where(X => X.Name.LocalName == "TriggerResultMessage").First().Attribute("CatchThrow") != null)
                         if (xElementActivity.Descendants().Where(X => X.Name.LocalName == "TriggerResultMessage").First().Attribute("CatchThrow").Value == "THROW")
-                            isThrow = true;
-                
+                            isThrow = true;                
             }
 
-           
+            private Boolean hasOutgoingMessageFlow()
+            {
+                IEnumerable<MessageFlow> outgoingMessageFlow = this.flowMessages.Where(X => X.source == this.id);
+
+                if (outgoingMessageFlow.Count() != 0)                
+                    return true;                
+                else                
+                    return false;                
+            }
+
+            private Boolean hasIncomingMessageFlow()
+            {
+                IEnumerable<MessageFlow> incomingMessageFlow = this.flowMessages.Where(X => X.Target == this.id);
+                if (incomingMessageFlow.Count() == 0)
+                    return false;
+                else
+                    return true;
+            }
+            
     }
 }

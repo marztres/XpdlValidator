@@ -12,12 +12,18 @@ namespace XpdlValidator.Model
         public StartEvent(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
             : base(elementActivity,xmlXDocument,transitions,activities)
         {
+            this.typeActivity = "StartEvent";
         }
 
-        public override void validate() 
+        public override List<RuleException> validate()
         {
-            base.hasOutgoinSecuenceFlow();
-            
+            List<RuleException> rulesExceptions = new List<RuleException>();
+
+
+            if (!(base.hasOutgoinSecuenceFlow()))
+                rulesExceptions.Add(new RuleException("This startEvent must have an outgoing sequence flow", xElementActivity, xmlXDocument, typeActivity));    
+
+            return rulesExceptions;
         }
 
     }

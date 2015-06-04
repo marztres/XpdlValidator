@@ -7,10 +7,25 @@ using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
-    class RuleException : Exception
+    public class RuleException : ApplicationException
     {
-        public XDocument xmlXDocument { get; set; } //Xml completo
+        public XDocument xmlXDocument { get; set; } //XDocument
         public XElement xElement { get; set; } //XElement del error.
+
+        public string id
+        {
+            get
+            {
+                return xElement.Attribute("Id").Value;
+            }
+        }
+        public string name
+        {
+            get
+            {
+                return xElement.Attribute("Name").Value;
+            }
+        }
         public string elementName
         {
             get
@@ -19,17 +34,20 @@ namespace XpdlValidator.Model
             }
         }
         public string XPath { get; set; }
+        public string typeActivity { get; set;}
 
-        RuleException(string message, XElement xElement, XDocument xmlXDocument)
+        public RuleException(string message, XElement xElement, XDocument xmlXDocument,string typeActivity)
             : base(message) 
         {
             this.xElement = xElement;
             this.xmlXDocument = xmlXDocument;
+            XPath = getXPath(xElement, xmlXDocument);
+            this.typeActivity = typeActivity; 
         }
 
         private string getXPath(XElement _xElement, XDocument xmlXDocument)
         {
-            return "";
+            return "parent/children/son/producto";
         }
     }
 }
