@@ -13,29 +13,31 @@ namespace XpdlValidator.Model
                         {
                             get
                             {
-                                return elementActivity.Attribute("Id").Value;
+                                return xElementActivity.Attribute("Id").Value;
                             }
                          }
         public string name
-        {
-                                get
-                                {
-                                    return elementActivity.Attribute("Name").Value;
-                                }
+                        {
+                            get
+                            {
+                                return xElementActivity.Attribute("Name").Value;
                             }
-        public XElement elementActivity { get; set; } //XElement de la actividad.
+                        }
+        public XElement xElementActivity { get; set; } //XElement de la actividad.
         public XDocument xmlXDocument { get; set; } //Xml completo
-        public string elementName {
+        public string xElementName {
                                 get {
-                                        return elementActivity.Name.LocalName;    
+                                        return xElementActivity.Name.LocalName;    
                                     }
                                   }
         public IEnumerable<Transition> transitions { get; set; }
+        public IEnumerable<Activity> activities { get; set; }
 
-        public Activity(XElement elementActivity, XDocument xmlXDocument)
+        public Activity(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Activity> activities)
         {
-            this.elementActivity = elementActivity;
+            this.xElementActivity = elementActivity;
             this.xmlXDocument = xmlXDocument;
+            this.activities = activities;
         }
         
         public abstract void validate();

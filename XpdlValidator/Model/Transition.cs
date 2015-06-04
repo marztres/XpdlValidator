@@ -9,32 +9,38 @@ namespace XpdlValidator.Model
 {
     public class Transition
     {
-        public string id { get; set; }
-        public string name { get; set; }
+        public string id
+        {
+            get
+            {
+                return xElementTransition.Attribute("Id").Value;
+            }
+        }
         public string to { 
                             get {
-                                    return elementTransition.Attribute("To").Value; 
+                                    return xElementTransition.Attribute("To").Value; 
                                 } 
                          }
         public string from
                          {
                             get
                             {
-                                return elementTransition.Attribute("From").Value;
+                                return xElementTransition.Attribute("From").Value;
                             }
                          }
         public string elementName
         {
             get
             {
-                return elementTransition.Name.LocalName;
+                return xElementTransition.Name.LocalName;
             }
         }
-        public XElement elementTransition { get; set; } //XElement de la transición.
+        public XElement xElementTransition { get; set; } //XElement de la transición.
 
-        public Transition(XElement elementTransition) 
+        public Transition(XElement xElementTransition)
         {
-            this.elementTransition = elementTransition;
+            this.xElementTransition = xElementTransition;
         }
+
     }
 }

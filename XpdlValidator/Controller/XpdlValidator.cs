@@ -15,23 +15,25 @@ namespace XpdlValidator.Controller
         {
             XNamespace  XDocumentNameSpace = xmlXDocument.Root.GetDefaultNamespace();
 
-            IEnumerable<XElement> activities = from activity in xmlXDocument.Root.Descendants(XDocumentNameSpace + "Activity") select activity;
-            List<Transition> transitions = xmlXDocument.Root.Descendants(XDocumentNameSpace + "Transition").Select(X => new Transition { elementTransition = (XElement)X }).ToList();
+            IEnumerable<XElement> xElementActivities = from activity in xmlXDocument.Root.Descendants(XDocumentNameSpace + "Activity") select activity;
+            IEnumerable<Transition> transitions = from transition in xmlXDocument.Root.Descendants(XDocumentNameSpace + "Transition") select new Transition((XElement)transition) ;
+            List<Activity> activities = new List<Activity>();
 
-            foreach (XElement elementActivity in activities)
+            foreach (XElement xElementActivity in xElementActivities)
             {
-                //Activity activity = getActivity(nodeActivity, documentoXpdl.Root.Descendants(), idPool, namePool, proccessId);
+                Activity activity = getActivity(xElementActivity, xmlXDocument, transitions, activities);
+                activities.Add(activity);
             }
 
         }
 
-        public Activity getActivity(XElement elementActivity, XDocument xmlXDocument)
+        public Activity getActivity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
         {
             Activity activity;
             
             List<string> typesActivities = new List<string>() { "Implementation", "Event" };
 
-            IEnumerable<XElement> typeActivity = from tipo in elementActivity.Elements()
+            IEnumerable<XElement> typeActivity = from tipo in xElementActivity.Elements()
                                                  where typesActivities.Contains((string)tipo.Name.LocalName)
                                                  select tipo;
 
@@ -39,28 +41,26 @@ namespace XpdlValidator.Controller
             {
                 List<string> typesEvents = new List<string>() { "StartEvent", "IntermediateEvent", "EndEvent" };
 
-                IEnumerable<XElement> typeEvent = from tipo in typeActivity.Elements()
+                IEnumerable<XElement> typeEvent = from tipo in typeActivity.Elements() 
                                                   where typesEvents.Contains((string)tipo.Name.LocalName)
                                                   select tipo;
                 if (typeEvent.First().Name.LocalName == "StartEvent")
                 {
-                    activity = new StartEvent(elementActivity,xmlXDocument);
+                    return activity = new StartEvent(xElementActivity, xmlXDocument, transitions,activities);
                 }
                 else if (typeEvent.First().Name.LocalName == "IntermediateEvent")
                 {
-                    activity = new IntermediateEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
+                    return activity = new IntermediateEvent(xElementActivity, xmlXDocument, transitions,activities);
                 }
                 else
                 {
-                    activity = new EndEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
+                    return activity = new EndEvent(xElementActivity, xmlXDocument, transitions,activities);
                 }
             }
             else
             {
-                activity = new TaskEvent(idActivity, nameActivity, elementsXpdl, nodeActivity, idPool, namePool, proccessId);
+                return activity = new TaskEvent(xElementActivity, xmlXDocument, transitions, activities);
             }
-
-            return activity;
         }
 
 

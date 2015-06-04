@@ -9,8 +9,8 @@ namespace XpdlValidator.Model
 {
     public class EndEvent : Event
     {
-        public EndEvent(XElement elementActivity, XDocument xmlXDocument, List<Transition> transitions)
-            : base(elementActivity, xmlXDocument, transitions)
+        public EndEvent(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
+            : base(xElementActivity, xmlXDocument, transitions,activities)
         {
         }
 

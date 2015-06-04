@@ -9,8 +9,8 @@ namespace XpdlValidator.Model
 {
     public class StartEvent : Event
     {
-        public StartEvent(XElement elementActivity, XDocument xmlXDocument, List<Transition> transitions)
-            : base(elementActivity,xmlXDocument,transitions)
+        public StartEvent(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
+            : base(elementActivity,xmlXDocument,transitions,activities)
         {
         }
 

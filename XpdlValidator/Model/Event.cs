@@ -9,7 +9,8 @@ namespace XpdlValidator.Model
 {
     public abstract class Event : Activity
     {
-        public Event(XElement elementActivity, XDocument xmlXDocument,List<Transition> transitions) : base(elementActivity, xmlXDocument) 
+        public Event(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
+            : base(elementActivity, xmlXDocument,activities) 
         {
             this.transitions = transitions.Where(X => X.to == this.id || X.from == this.id);
         }

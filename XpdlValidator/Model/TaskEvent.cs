@@ -7,13 +7,11 @@ using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
-    class TaskEvent : Event
+    public class TaskEvent : Event
     {
-        public IEnumerable<TaskEvent> taskEvents;
-        public TaskEvent(XElement elementActivity, XDocument xmlXDocument, List<Transition> transitions, List<TaskEvent> taskEvents)
-            : base(elementActivity, xmlXDocument, transitions)
+        public TaskEvent(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
+            : base(elementActivity, xmlXDocument, transitions,activities)
         {
-            this.taskEvents = taskEvents.Where(X => X.id != this.id);
         }
 
         public override void validate()
