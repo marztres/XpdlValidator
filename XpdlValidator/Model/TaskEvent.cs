@@ -46,12 +46,7 @@ namespace XpdlValidator.Model
 
             if (duplicateActivitiesName.Count() !=0)
             {
-                string errorMessage = "Varias actividades en el mismo proceso no pueden tener el mismo nombre use una actividad global para unificar, detalle = (Activity id: " + this.id + ", name:" + this.name + ") ";
-
-                foreach (Activity activity in duplicateActivitiesName)
-                {
-                    errorMessage += " ,(Activity id: " + activity.id + ", name: " + activity.name + ") ";
-                }
+                string errorMessage = " Two activities in the same process should not have the same name.";
 
                 throw new ApplicationException(errorMessage);
             }

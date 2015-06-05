@@ -56,7 +56,7 @@
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(989, 79);
             this.lblTitle.TabIndex = 11;
-            this.lblTitle.Text = "XPDL VALIDATOR V.0.5";
+            this.lblTitle.Text = "XPDL VALIDATOR V. 1.0";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtWelcomeMessage

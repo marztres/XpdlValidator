@@ -106,7 +106,6 @@
             this.gvErrores.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gvErrores.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gvErrores.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.gvErrores.BackgroundColor = System.Drawing.Color.White;
             this.gvErrores.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -172,6 +171,7 @@
             this.gvErrores.ShowRowErrors = false;
             this.gvErrores.Size = new System.Drawing.Size(952, 186);
             this.gvErrores.TabIndex = 10004;
+            this.gvErrores.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gvErrores_CellContentClick);
             this.gvErrores.Paint += new System.Windows.Forms.PaintEventHandler(this.gvErrores_Paint);
             // 
             // XpdlErrorViewer
