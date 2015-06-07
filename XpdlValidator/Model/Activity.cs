@@ -38,23 +38,17 @@ namespace XpdlValidator.Model
 
         protected bool HasOutgoinSecuenceFlow()
         {
-            IEnumerable<Transition> outSecuenceFlow = Transitions.Where(x=> x.From == this.Id);
-
-            return outSecuenceFlow.Count() != 0;
+            return Transitions.Any(x=> x.From == this.Id);
         }
 
         protected bool HasIncomingSecuenceFlow()
         {
-            IEnumerable<Transition> incomingSecuenceFlow = Transitions.Where(x => x.To == this.Id);
-
-            return incomingSecuenceFlow.Any();
+            return Transitions.Any(x => x.To == this.Id);
         }
 
         protected bool ExistStartOrEndEvent()
         {
-            IEnumerable<Activity> startOrEndEvent = this.Activities.Where(x => x.GetType() == typeof(StartEvent) || x.GetType() == typeof(EndEvent));
-
-            return startOrEndEvent.Count() != 0;
+            return this.Activities.Any(x => x.GetType() == typeof(StartEvent) || x.GetType() == typeof(EndEvent));
         }
     }
 }

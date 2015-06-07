@@ -8,14 +8,14 @@ namespace XpdlValidator.Model
         {
             get
             {
-                return XElementMessageFlow.Attribute("Target").Value;
+                return XElementMessageFlow.Attribute("Target") != null ? XElementMessageFlow.Attribute("Target").Value : string.Empty;                
             }
         }
         public string Source
         {
             get
             {
-                return XElementMessageFlow.Attribute("Source").Value;
+                return XElementMessageFlow.Attribute("Source") != null ? XElementMessageFlow.Attribute("Source").Value : string.Empty;
             }
         }
 

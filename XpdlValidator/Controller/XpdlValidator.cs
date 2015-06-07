@@ -16,34 +16,32 @@ namespace XpdlValidator.Controller
 
         public ValidatorXpdl(XDocument xmlXDocument) 
         {
-            if (xmlXDocument.Root != null)
+            if (xmlXDocument.Root == null) return;
+            XNamespace  xDocumentNameSpace = xmlXDocument.Root.GetDefaultNamespace();
+
+            IEnumerable<XElement> xElementActivities = from activity in xmlXDocument.Root.Descendants(xDocumentNameSpace + "Activity") select activity;
+            IEnumerable<Transition> transitions = from transition in xmlXDocument.Root.Descendants(xDocumentNameSpace + "Transition") select new Transition((XElement)transition) ;
+            IEnumerable<MessageFlow> flowMessages = from messageFlow in xmlXDocument.Root.Descendants(xDocumentNameSpace + "MessageFlow") select new MessageFlow((XElement)messageFlow);
+            List<Activity> activities = new List<Activity>();
+
+            foreach (XElement xElementActivity in xElementActivities)
             {
-                XNamespace  xDocumentNameSpace = xmlXDocument.Root.GetDefaultNamespace();
+                Activity activity = GetActivity(xElementActivity, xmlXDocument, transitions, activities, flowMessages);
+                activities.Add(activity);
+            }
 
-                IEnumerable<XElement> xElementActivities = from activity in xmlXDocument.Root.Descendants(xDocumentNameSpace + "Activity") select activity;
-                IEnumerable<Transition> transitions = from transition in xmlXDocument.Root.Descendants(xDocumentNameSpace + "Transition") select new Transition((XElement)transition) ;
-                IEnumerable<MessageFlow> flowMessages = from messageFlow in xmlXDocument.Root.Descendants(xDocumentNameSpace + "MessageFlow") select new MessageFlow((XElement)messageFlow);
-                List<Activity> activities = new List<Activity>();
+            foreach (Activity activity in activities)
+            {
+                IEnumerable<RuleException> validationExceptions = activity.Validate();
 
-                foreach (XElement xElementActivity in xElementActivities)
+                foreach (RuleException ruleException in validationExceptions)
                 {
-                    Activity activity = getActivity(xElementActivity, xmlXDocument, transitions, activities, flowMessages);
-                    activities.Add(activity);
-                }
-
-                foreach (Activity activity in activities)
-                {
-                    IEnumerable<RuleException> validationExceptions = activity.Validate();
-
-                    foreach (RuleException ruleException in validationExceptions)
-                    {
-                        RulesExceptions.Add(ruleException);
-                    }
+                    RulesExceptions.Add(ruleException);
                 }
             }
         }
 
-        public Activity getActivity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities, IEnumerable<MessageFlow> flowMessages)
+        public Activity GetActivity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities, IEnumerable<MessageFlow> flowMessages)
         {
             List<string> typesActivities = new List<string>() { "Implementation", "Event" };
 

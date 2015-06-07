@@ -60,15 +60,13 @@ namespace XpdlValidator.Model
 
         private bool HasOutgoingMessageFlow()
             {
-                IEnumerable<MessageFlow> outgoingMessageFlow = this.FlowMessages.Where(x => x.Source == this.Id);
+                return this.FlowMessages.Any(x => x.Source == this.Id);
 
-                return outgoingMessageFlow.Count() != 0;
             }
 
         private bool HasIncomingMessageFlow()
             {
-                IEnumerable<MessageFlow> incomingMessageFlow = this.FlowMessages.Where(x => x.Target == this.Id);
-                return incomingMessageFlow.Any();
+                return this.FlowMessages.Any(x => x.Target == this.Id);
             }
     }
 }
