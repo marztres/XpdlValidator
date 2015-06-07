@@ -14,6 +14,7 @@ namespace XpdlValidator.Model
             : base(elementActivity, xmlXDocument, transitions,activities)
         {
             this.TypeActivity = "Task";
+            GetProceso();
         }
 
         public override IEnumerable<RuleException> Validate()
@@ -50,6 +51,11 @@ namespace XpdlValidator.Model
                 throw new ApplicationException(errorMessage);
             }
         
+        }
+
+        private void GetProceso()
+        {
+            var ancentros = base.XElementActivity.Ancestors().First(x=> x.Name.LocalName == "Process");
         }
 
     }
