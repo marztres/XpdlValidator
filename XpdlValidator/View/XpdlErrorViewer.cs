@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using XpdlValidator.Controller;
+using XpdlValidator.Model;
 using XpdlValidator.Utility;
 
 namespace XpdlValidator.View
@@ -21,8 +17,8 @@ namespace XpdlValidator.View
             InitializeComponent();
         }
 
-        private ValidatorXpdl validatorXpdl;
-        private XDocument xmlXDocument;
+        private ValidatorXpdl _validatorXpdl;
+        private readonly XDocument xmlXDocument;
 
         public XpdlErrorViewer(XDocument xmlXDocument) 
         {
@@ -35,28 +31,30 @@ namespace XpdlValidator.View
         {
             txtXmlViewer.Text = DocumentExtensions.BeautifyXml(xmlXDocument.ToXmlDocument());
             
-            validatorXpdl = new ValidatorXpdl(xmlXDocument);
+            _validatorXpdl = new ValidatorXpdl(xmlXDocument);
 
-            cargarErrores();
+            CargarErrores();
         }
 
 
-        private void cargarErrores() 
+        private void CargarErrores() 
         {
-            gvErrores.DataSource = validatorXpdl.rulesExceptions.Select(ruleException => new { errorIcon = getImageError(), ruleException.Message, ruleException.id, ruleException.name, ruleException.typeActivity, ruleException.XPath, exception = ruleException }).ToList();
+            gvErrores.DataSource = _validatorXpdl.RulesExceptions.Select(ruleException => new { errorIcon = getImageError(), ruleException.Message, id = ruleException.Id, name = ruleException.Name, typeActivity = ruleException.TypeActivity, ruleException.XPath, exception = ruleException }).ToList();
 
-            estilosGridview();
+            EstilosGridview();
         }
 
-        private void estilosGridview() 
+        private void EstilosGridview() 
         {
 
             DataGridViewButtonColumn buttonColumn =
-            new DataGridViewButtonColumn();
-            buttonColumn.HeaderText = "Info";
-            buttonColumn.Name = "Info";
-            buttonColumn.Text = "Info";
-            buttonColumn.UseColumnTextForButtonValue = true;
+                new DataGridViewButtonColumn
+                {
+                    HeaderText = "Info",
+                    Name = "Info",
+                    Text = "Info",
+                    UseColumnTextForButtonValue = true
+                };
 
             gvErrores.Columns.Add(buttonColumn);
 
@@ -88,37 +86,32 @@ namespace XpdlValidator.View
         {
             DataGridView sndr = (DataGridView)sender;
 
-            if (sndr.Rows.Count == 0) // <-- if there are no rows in the DataGridView when it paints, then it will create your message
+            if (sndr.Rows.Count != 0) return;
+            using (Graphics grfx = e.Graphics)
             {
-                using (Graphics grfx = e.Graphics)
-                {
-                    // create a white rectangle so text will be easily readable
-                    grfx.FillRectangle(Brushes.White, new Rectangle(new Point(), new Size(sndr.Width, 50)));
-                    // write text on top of the white rectangle just created
-                    grfx.DrawString("XPDL file without errors.", new Font("Open sans", 16, FontStyle.Bold), Brushes.Black, new PointF(3, 3));
-                }
+                // create a white rectangle so text will be easily readable
+                grfx.FillRectangle(Brushes.White, new Rectangle(new Point(), new Size(sndr.Width, 50)));
+                // write text on top of the white rectangle just created
+                grfx.DrawString("XPDL file without errors.", new Font("Open sans", 16, FontStyle.Bold), Brushes.Black, new PointF(3, 3));
             }
         }
 
         private void gvErrores_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 7)
-            {
-                XpdlValidator.Model.RuleException ruleException = (XpdlValidator.Model.RuleException)gvErrores.Rows[e.RowIndex].Cells[6].Value;
+            if (e.ColumnIndex != 7) return;
+            RuleException ruleException = (RuleException)gvErrores.Rows[e.RowIndex].Cells[6].Value;
 
-                ruleExceptionDetail(ruleException);
-            
-            }
+            RuleExceptionDetail(ruleException);
         }
 
-        private void ruleExceptionDetail(XpdlValidator.Model.RuleException ruleException)
+        private void RuleExceptionDetail(RuleException ruleException)
         {            
             XmlDocument xmlDocument = new XmlDocument();            
-            xmlDocument.LoadXml(ruleException.xElement.ToString());
+            xmlDocument.LoadXml(ruleException.XElement.ToString());
 
-            string detalleError = " Id : " +ruleException.id + Environment.NewLine + " Name : " +ruleException.name + Environment.NewLine + " Message : " +ruleException.Message + Environment.NewLine + " Xpath : " + ruleException.XPath + Environment.NewLine + " Elemento Xml : " + Environment.NewLine  + DocumentExtensions.BeautifyXml(xmlDocument);
+            string detalleError = " Id : " +ruleException.Id + Environment.NewLine + " Name : " +ruleException.Name + Environment.NewLine + " Message : " +ruleException.Message + Environment.NewLine + " Xpath : " + ruleException.XPath + Environment.NewLine + " Elemento Xml : " + Environment.NewLine  + DocumentExtensions.BeautifyXml(xmlDocument);
 
-            MessageBox.Show(detalleError, " Id :" + ruleException.id + " - " + ruleException.typeActivity, MessageBoxButtons.OK, MessageBoxIcon.Information);                  
+            MessageBox.Show(detalleError, " Id :" + ruleException.Id + " - " + ruleException.TypeActivity, MessageBoxButtons.OK, MessageBoxIcon.Information);                  
         }
 
 

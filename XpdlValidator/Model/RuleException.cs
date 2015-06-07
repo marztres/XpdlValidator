@@ -1,87 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
     public class RuleException : ApplicationException
     {
-        public XDocument xmlXDocument { get; set; } //XDocument
-        public XElement xElement { get; set; } //XElement del error.
+        public XElement XElement { get; private set; } //XElement del error.
 
-        public string id
+        public string Id
         {
             get
             {
-                return xElement.Attribute("Id").Value;
+                return XElement.Attribute("Id").Value;
             }
         }
-        public string name
+        public string Name
         {
             get
             {
-                return xElement.Attribute("Name").Value;
+                return XElement.Attribute("Name").Value;
             }
         }
-        public string elementName
+        public string ElementName
         {
             get
             {
-                return xElement.Name.LocalName;
+                return XElement.Name.LocalName;
             }
         }
         public string XPath { get; set; }
-        public string typeActivity { get; set;}
+        public string TypeActivity { get; set;}
 
-        public RuleException(string message, XElement xElement, XDocument xmlXDocument,string typeActivity)
+        public RuleException(string message, XElement xElement,string typeActivity)
             : base(message) 
         {
-            this.xElement = xElement;
-            this.xmlXDocument = xmlXDocument;
+            this.XElement = xElement;
             XPath = GetPath(xElement);
-            this.typeActivity = typeActivity; 
+            this.TypeActivity = typeActivity; 
         }
 
-        public string GetPath(XElement element)
+        private string GetPath(XElement element)
         {
             return string.Join("/", element.AncestorsAndSelf().Reverse()
                 .Select(e =>
                 {
                     var index = GetIndex(e);
 
-                    if (index == 1)
-                    {
-                        return e.Name.LocalName;
-                    }
-
-                    return string.Format("{0}[{1}]", e.Name.LocalName, GetIndex(e));
+                    return index == 1 ? e.Name.LocalName : string.Format("{0}[{1}]", e.Name.LocalName, GetIndex(e));
                 }));
 
         }
 
-        private int GetIndex(XElement element)
+        private static int GetIndex(XElement element)
         {
-            var i = 1;
-
             if (element.Parent == null)
             {
                 return 1;
             }
 
-            foreach (var e in element.Parent.Elements(element.Name.LocalName))
-            {
-                if (e == element)
-                {
-                    break;
-                }
-
-                i++;
-            }
-
-            return i;
+            return 1 + element.Parent.Elements(element.Name.LocalName).TakeWhile(e => e != element).Count();
         }
     }
 }

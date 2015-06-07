@@ -89,7 +89,7 @@
             this.btnCargarArchivo.TabIndex = 13;
             this.btnCargarArchivo.Text = "Cargar archivo .XPDL";
             this.btnCargarArchivo.UseVisualStyleBackColor = true;
-            this.btnCargarArchivo.Click += new System.EventHandler(this.cargarArchivo);
+            this.btnCargarArchivo.Click += new System.EventHandler(this.CargarArchivo);
             // 
             // btnBuscarArchivo
             // 
@@ -102,7 +102,7 @@
             this.btnBuscarArchivo.TabIndex = 14;
             this.btnBuscarArchivo.Text = "Search";
             this.btnBuscarArchivo.UseVisualStyleBackColor = true;
-            this.btnBuscarArchivo.Click += new System.EventHandler(this.buscarArchivo);
+            this.btnBuscarArchivo.Click += new System.EventHandler(this.BuscarArchivo);
             // 
             // Inicio
             // 

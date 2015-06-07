@@ -1,4 +1,3 @@
-Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.Form1.resources
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.Properties.Resources.resources
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.csproj.GenerateResource.Cache
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\bin\Release\XpdlValidator.exe.config
@@ -8,4 +7,3 @@ Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.e
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.pdb
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.View.Inicio.resources
 Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.View.XpdlErrorViewer.resources
-Z:\trabajo\XpdlValidator\XpdlValidator\XpdlValidator\obj\Release\XpdlValidator.csprojResolveAssemblyReference.cache

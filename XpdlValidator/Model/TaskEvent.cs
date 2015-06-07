@@ -13,41 +13,40 @@ namespace XpdlValidator.Model
         public TaskEvent(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
             : base(elementActivity, xmlXDocument, transitions,activities)
         {
-            this.typeActivity = "Task";
+            this.TypeActivity = "Task";
         }
 
-        public override List<RuleException> validate()
+        public override IEnumerable<RuleException> Validate()
         {
             List<RuleException> rulesExceptions = new List<RuleException>();
 
             try
             {
-                if (base.existStartOrEndEvent())
-                    if (!(base.hasOutgoinSecuenceFlow()))
-                        rulesExceptions.Add(new RuleException("This activity must have an outgoing sequence flow", xElementActivity, xmlXDocument, typeActivity));
+                if (base.ExistStartOrEndEvent())
+                    if (!(base.HasOutgoinSecuenceFlow()))
+                        rulesExceptions.Add(new RuleException("This activity must have an outgoing sequence flow", XElementActivity, TypeActivity));
                 
-                isActivityNameUnique();
+                IsActivityNameUnique();
             }
             catch (ApplicationException ex)
             {
-                rulesExceptions.Add(new RuleException(ex.Message, xElementActivity, xmlXDocument, typeActivity));
+                rulesExceptions.Add(new RuleException(ex.Message, XElementActivity, TypeActivity));
             }
             catch (Exception ex)
             {
-                rulesExceptions.Add(new RuleException(ex.Message, xElementActivity, xmlXDocument, typeActivity));
+                rulesExceptions.Add(new RuleException(ex.Message, XElementActivity, TypeActivity));
             }
 
             return rulesExceptions;
         }
 
-        private void isActivityNameUnique() 
+        private void IsActivityNameUnique() 
         {
-            IEnumerable<Activity> duplicateActivitiesName = base.activities.Where(X => X.id != this.id && X.GetType() == typeof(TaskEvent) && !String.IsNullOrEmpty(X.name) && X.name == name);
+            IEnumerable<Activity> duplicateActivitiesName = base.Activities.Where(x => x.Id != this.Id && x.GetType() == typeof(TaskEvent) && !string.IsNullOrEmpty(x.Name) && x.Name == Name);
 
+            const string errorMessage = " Two activities in the same process should not have the same name.";
             if (duplicateActivitiesName.Count() !=0)
             {
-                string errorMessage = " Two activities in the same process should not have the same name.";
-
                 throw new ApplicationException(errorMessage);
             }
         

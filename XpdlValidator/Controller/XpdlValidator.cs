@@ -12,69 +12,67 @@ namespace XpdlValidator.Controller
 {
     public class ValidatorXpdl
     {
-        public List<RuleException> rulesExceptions  = new List<RuleException>();
+        public readonly List<RuleException> RulesExceptions  = new List<RuleException>();
 
         public ValidatorXpdl(XDocument xmlXDocument) 
         {
-            
-            XNamespace  XDocumentNameSpace = xmlXDocument.Root.GetDefaultNamespace();
-
-            IEnumerable<XElement> xElementActivities = from activity in xmlXDocument.Root.Descendants(XDocumentNameSpace + "Activity") select activity;
-            IEnumerable<Transition> transitions = from transition in xmlXDocument.Root.Descendants(XDocumentNameSpace + "Transition") select new Transition((XElement)transition) ;
-            IEnumerable<MessageFlow> flowMessages = from messageFlow in xmlXDocument.Root.Descendants(XDocumentNameSpace + "MessageFlow") select new MessageFlow((XElement)messageFlow);
-            List<Activity> activities = new List<Activity>();
-
-            foreach (XElement xElementActivity in xElementActivities)
+            if (xmlXDocument.Root != null)
             {
-                Activity activity = getActivity(xElementActivity, xmlXDocument, transitions, activities, flowMessages);
-                activities.Add(activity);
-            }
+                XNamespace  xDocumentNameSpace = xmlXDocument.Root.GetDefaultNamespace();
 
-            foreach (Activity activity in activities)
-            {
-                List<RuleException> validationExceptions = activity.validate();
+                IEnumerable<XElement> xElementActivities = from activity in xmlXDocument.Root.Descendants(xDocumentNameSpace + "Activity") select activity;
+                IEnumerable<Transition> transitions = from transition in xmlXDocument.Root.Descendants(xDocumentNameSpace + "Transition") select new Transition((XElement)transition) ;
+                IEnumerable<MessageFlow> flowMessages = from messageFlow in xmlXDocument.Root.Descendants(xDocumentNameSpace + "MessageFlow") select new MessageFlow((XElement)messageFlow);
+                List<Activity> activities = new List<Activity>();
 
-                foreach (RuleException ruleException in validationExceptions)
+                foreach (XElement xElementActivity in xElementActivities)
                 {
-                    rulesExceptions.Add(ruleException);
+                    Activity activity = getActivity(xElementActivity, xmlXDocument, transitions, activities, flowMessages);
+                    activities.Add(activity);
+                }
+
+                foreach (Activity activity in activities)
+                {
+                    IEnumerable<RuleException> validationExceptions = activity.Validate();
+
+                    foreach (RuleException ruleException in validationExceptions)
+                    {
+                        RulesExceptions.Add(ruleException);
+                    }
                 }
             }
-
         }
 
         public Activity getActivity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities, IEnumerable<MessageFlow> flowMessages)
         {
-            Activity activity;
-            
             List<string> typesActivities = new List<string>() { "Implementation", "Event" };
 
             IEnumerable<XElement> typeActivity = from tipo in xElementActivity.Elements()
                                                  where typesActivities.Contains((string)tipo.Name.LocalName)
                                                  select tipo;
 
-            if (typeActivity.First().Name.LocalName == "Event")
+            XElement[] xElements = typeActivity as XElement[] ?? typeActivity.ToArray();
+            if (xElements.First().Name.LocalName == "Event")
             {
                 List<string> typesEvents = new List<string>() { "StartEvent", "IntermediateEvent", "EndEvent" };
 
-                IEnumerable<XElement> typeEvent = from tipo in typeActivity.Elements() 
+                IEnumerable<XElement> typeEvent = from tipo in xElements.Elements() 
                                                   where typesEvents.Contains((string)tipo.Name.LocalName)
                                                   select tipo;
-                if (typeEvent.First().Name.LocalName == "StartEvent")
+                XElement[] enumerable = typeEvent as XElement[] ?? typeEvent.ToArray();
+                switch (enumerable.First().Name.LocalName)
                 {
-                    return activity = new StartEvent(xElementActivity, xmlXDocument, transitions,activities);
-                }
-                else if (typeEvent.First().Name.LocalName == "IntermediateEvent")
-                {
-                    return activity = new IntermediateEvent(xElementActivity, xmlXDocument, transitions,activities,flowMessages);
-                }
-                else
-                {
-                    return activity = new EndEvent(xElementActivity, xmlXDocument, transitions,activities);
+                    case "StartEvent":
+                        return new StartEvent(xElementActivity, xmlXDocument, transitions,activities);
+                    case "IntermediateEvent":
+                        return new IntermediateEvent(xElementActivity, xmlXDocument, transitions,activities,flowMessages);
+                    default:
+                        return new EndEvent(xElementActivity, xmlXDocument, transitions,activities);
                 }
             }
             else
             {
-                return activity = new TaskEvent(xElementActivity, xmlXDocument, transitions, activities);
+                return new TaskEvent(xElementActivity, xmlXDocument, transitions, activities);
             }
         }
 

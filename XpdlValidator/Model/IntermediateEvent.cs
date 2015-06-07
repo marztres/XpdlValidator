@@ -1,81 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
     class IntermediateEvent : Event
     {
-        public string typeEvent
+        private string TypeEvent
                                 {
                                     get
                                     {
-                                        return xElementActivity.Descendants().Where(X => X.Name.LocalName == "IntermediateEvent").First().Attribute("Trigger").Value;
+                                        return XElementActivity.Descendants().First(x => x.Name.LocalName == "IntermediateEvent").Attribute("Trigger").Value;
                                     }
                                 }
-        public Boolean isThrow = false;
-        public IEnumerable<MessageFlow> flowMessages { get; set; }
+        private IEnumerable<MessageFlow> FlowMessages { get; set; }
+        private bool _isThrow = false;
 
         public IntermediateEvent(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities, IEnumerable<MessageFlow> flowMessages)
             : base(xElementActivity, xmlXDocument, transitions,activities)
             {
-                getAtributesByType();
-                this.flowMessages = flowMessages;
-                this.typeActivity = "IntermediateEvent";
+                GetAtributesByType();
+                this.FlowMessages = flowMessages;
+                this.TypeActivity = "IntermediateEvent";
             }
 
-            public override List<RuleException> validate()
+            public override IEnumerable<RuleException> Validate()
             {
                 List<RuleException> rulesExceptions = new List<RuleException>();
 
-                if (base.existStartOrEndEvent())
-                    if (!(base.hasOutgoinSecuenceFlow()))
-                        rulesExceptions.Add(new RuleException("This intermediate event should have an outgoing sequence flow", xElementActivity, xmlXDocument, typeActivity));
+                if (base.ExistStartOrEndEvent())
+                    if (!(base.HasOutgoinSecuenceFlow()))
+                        rulesExceptions.Add(new RuleException("This intermediate event should have an outgoing sequence flow", XElementActivity, TypeActivity));
 
-                if (isThrow && String.IsNullOrEmpty(this.name))
-                    rulesExceptions.Add(new RuleException(" A throwing intermediate event should be labeled.", xElementActivity, xmlXDocument, typeActivity));
+                if (_isThrow && String.IsNullOrEmpty(this.Name))
+                    rulesExceptions.Add(new RuleException(" A throwing intermediate event should be labeled.", XElementActivity, TypeActivity));
 
-                if (typeEvent == "Message" && !isThrow)
-                    if (!(hasIncomingMessageFlow()))
-                        rulesExceptions.Add(new RuleException(" A catching Message event should have incoming message flow.", xElementActivity, xmlXDocument, typeActivity));
+                if (TypeEvent == "Message" && !_isThrow)
+                    if (!(HasIncomingMessageFlow()))
+                        rulesExceptions.Add(new RuleException(" A catching Message event should have incoming message flow.", XElementActivity, TypeActivity));
 
-                if (typeEvent == "Message" && isThrow)
-                    if (!(hasOutgoingMessageFlow()))
-                        rulesExceptions.Add(new RuleException(" A throwing Message event should have outgoing message flow.", xElementActivity, xmlXDocument, typeActivity));
+                if (TypeEvent != "Message" || !_isThrow) return rulesExceptions;
+                if (!(HasOutgoingMessageFlow()))
+                    rulesExceptions.Add(new RuleException(" A throwing Message event should have outgoing message flow.", XElementActivity, TypeActivity));
 
                 return rulesExceptions;
             }
 
-            protected void getAtributesByType() 
+        private void GetAtributesByType()
+        {
+            if (XElementActivity.Descendants().Count(x => x.Name.LocalName == "TriggerResultMessage") == 0) return;
+            if (
+                XElementActivity.Descendants()
+                    .First(x => x.Name.LocalName == "TriggerResultMessage")
+                    .Attribute("CatchThrow") == null) return;
+            if (XElementActivity.Descendants().First(x => x.Name.LocalName == "TriggerResultMessage").Attribute("CatchThrow").Value == "THROW")
+                _isThrow = true;
+        }
+
+        private bool HasOutgoingMessageFlow()
             {
-                if (xElementActivity.Descendants().Where(X => X.Name.LocalName == "TriggerResultMessage").Count() != 0)
-                    if (xElementActivity.Descendants().Where(X => X.Name.LocalName == "TriggerResultMessage").First().Attribute("CatchThrow") != null)
-                        if (xElementActivity.Descendants().Where(X => X.Name.LocalName == "TriggerResultMessage").First().Attribute("CatchThrow").Value == "THROW")
-                            isThrow = true;                
+                IEnumerable<MessageFlow> outgoingMessageFlow = this.FlowMessages.Where(x => x.Source == this.Id);
+
+                return outgoingMessageFlow.Count() != 0;
             }
 
-            private Boolean hasOutgoingMessageFlow()
+        private bool HasIncomingMessageFlow()
             {
-                IEnumerable<MessageFlow> outgoingMessageFlow = this.flowMessages.Where(X => X.source == this.id);
-
-                if (outgoingMessageFlow.Count() != 0)                
-                    return true;                
-                else                
-                    return false;                
+                IEnumerable<MessageFlow> incomingMessageFlow = this.FlowMessages.Where(x => x.Target == this.Id);
+                return incomingMessageFlow.Any();
             }
-
-            private Boolean hasIncomingMessageFlow()
-            {
-                IEnumerable<MessageFlow> incomingMessageFlow = this.flowMessages.Where(X => X.Target == this.id);
-                if (incomingMessageFlow.Count() == 0)
-                    return false;
-                else
-                    return true;
-            }
-            
     }
 }

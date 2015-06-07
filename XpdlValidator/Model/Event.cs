@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
     public abstract class Event : Activity
     {
-        public Event(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
+        protected Event(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
             : base(elementActivity, xmlXDocument,activities) 
         {
-            this.transitions = transitions.Where(X => X.to == this.id || X.from == this.id);
+            this.Transitions = transitions.Where(x => x.To == this.Id || x.From == this.Id);
         }
     }
 }

@@ -1,85 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
+
     public abstract class Activity
     {
-        public string id
+        public string Id
                         {
                             get
                             {
-                                return xElementActivity.Attribute("Id").Value;
+                                return XElementActivity.Attribute("Id").Value;
                             }
                          }
-        public string name
+        public string Name
                         {
                             get
                             {
-                                return xElementActivity.Attribute("Name").Value;
+                                return XElementActivity.Attribute("Name").Value;
                             }
                         }
-        public XElement xElementActivity { get; set; } //XElement de la actividad.
-        public XDocument xmlXDocument { get; set; } //Xml completo
-        public string xElementName {
-                                get {
-                                        return xElementActivity.Name.LocalName;    
-                                    }
-                                  }
-        public IEnumerable<Transition> transitions { get; set; }
-        public IEnumerable<Activity> activities { get; set; }
-        public string typeActivity { get; set; }
 
-        public Activity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Activity> activities)
+        protected XElement XElementActivity { get; private set; }
+
+        protected IEnumerable<Transition> Transitions { private get; set; }
+        protected IEnumerable<Activity> Activities { get; private set; }
+        protected string TypeActivity { get; set; }
+
+        protected Activity(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Activity> activities)
         {
-            this.xElementActivity = xElementActivity;
-            this.xmlXDocument = xmlXDocument;
-            this.activities = activities;
+            this.XElementActivity = xElementActivity;
+            this.Activities = activities;
         }
         
-        public abstract List<RuleException> validate();
+        public abstract IEnumerable<RuleException> Validate();
 
-        protected virtual Boolean hasOutgoinSecuenceFlow() 
+        protected bool HasOutgoinSecuenceFlow()
         {
-            IEnumerable<Transition> outSecuenceFlow = transitions.Where(X=> X.from == this.id);
+            IEnumerable<Transition> outSecuenceFlow = Transitions.Where(x=> x.From == this.Id);
 
-            if (outSecuenceFlow.Count() != 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;               
-            }
+            return outSecuenceFlow.Count() != 0;
         }
 
-        protected virtual Boolean hasIncomingSecuenceFlow()
+        protected bool HasIncomingSecuenceFlow()
         {
-            IEnumerable<Transition> incomingSecuenceFlow = transitions.Where(X => X.to == this.id);
+            IEnumerable<Transition> incomingSecuenceFlow = Transitions.Where(x => x.To == this.Id);
 
-            if (incomingSecuenceFlow.Count() == 0)
-                return false;
-            else
-                return true;
+            return incomingSecuenceFlow.Any();
         }
 
-        protected Boolean existStartOrEndEvent()
+        protected bool ExistStartOrEndEvent()
         {
-            IEnumerable<Activity> startOrEndEvent = this.activities.Where(X => X.GetType() == typeof(StartEvent) || X.GetType() == typeof(EndEvent));
+            IEnumerable<Activity> startOrEndEvent = this.Activities.Where(x => x.GetType() == typeof(StartEvent) || x.GetType() == typeof(EndEvent));
 
-            if (startOrEndEvent.Count() != 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return startOrEndEvent.Count() != 0;
         }
     }
 }

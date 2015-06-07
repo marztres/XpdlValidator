@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace XpdlValidator.Model
@@ -12,15 +8,15 @@ namespace XpdlValidator.Model
         public EndEvent(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
             : base(xElementActivity, xmlXDocument, transitions,activities)
         {
-            this.typeActivity = "EndEvent";
+            this.TypeActivity = "EndEvent";
         }
 
-        public override List<RuleException> validate()
+        public override IEnumerable<RuleException> Validate()
         {
             List<RuleException> rulesExceptions = new List<RuleException>();
 
-            if (!(base.hasIncomingSecuenceFlow()))
-                rulesExceptions.Add(new RuleException("End event must have an incoming sequence flow.", xElementActivity, xmlXDocument,typeActivity));
+            if (!(base.HasIncomingSecuenceFlow()))
+                rulesExceptions.Add(new RuleException("End event must have an incoming sequence flow.", XElementActivity,TypeActivity));
 
             return rulesExceptions;
         }
