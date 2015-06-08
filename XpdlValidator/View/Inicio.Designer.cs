@@ -74,8 +74,8 @@
             this.txtWelcomeMessage.Size = new System.Drawing.Size(820, 173);
             this.txtWelcomeMessage.TabIndex = 12;
             this.txtWelcomeMessage.TabStop = false;
-            this.txtWelcomeMessage.Text = "Bienvenidos a XPDL VALIDATOR, pulsa el botón \'Buscar archivo\' para selecionar un " +
-    "archivo .XPDL y despues pulsa \'Cargar archivo .XPDL\' para validarlo.\r\n\r\n";
+            this.txtWelcomeMessage.Text = "Welcome to XPDL VALIDATOR, make click in \"Search\" button and  select a XPDL file " +
+    "from your computer, them make click \"Load XPDL file\" button to validate. ";
             // 
             // btnCargarArchivo
             // 
@@ -87,7 +87,7 @@
             this.btnCargarArchivo.Name = "btnCargarArchivo";
             this.btnCargarArchivo.Size = new System.Drawing.Size(515, 75);
             this.btnCargarArchivo.TabIndex = 13;
-            this.btnCargarArchivo.Text = "Cargar archivo .XPDL";
+            this.btnCargarArchivo.Text = "Load .XPDL file";
             this.btnCargarArchivo.UseVisualStyleBackColor = true;
             this.btnCargarArchivo.Click += new System.EventHandler(this.CargarArchivo);
             // 

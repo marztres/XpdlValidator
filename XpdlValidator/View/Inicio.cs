@@ -18,7 +18,7 @@ namespace XpdlValidator.View
             OpenFileDialog fileReader = new OpenFileDialog();
 
             fileReader.Filter = "Image files (*.xpdl) | *.xpdl;";
-            fileReader.Title = "Por favor selecciona una arhico XPDL para validarlo.";
+            fileReader.Title = " Please select a XPDL file to validate.";
             if (fileReader.ShowDialog() == DialogResult.OK)
             {
                 txtRutaArchivo.Text = fileReader.FileName;
@@ -41,7 +41,7 @@ namespace XpdlValidator.View
 
                 using (XpdlErrorViewer frmConfiguracion = new XpdlErrorViewer(xmlXDocument))
                 {
-                    txtWelcomeMessage.Text = "Bienvenidos a XPDL VALIDATOR, pulsa el botón 'Buscar archivo' para selecionar un archivo .XPDL y despues pulsa 'Cargar archivo .XPDL' para validarlo.";
+                    txtWelcomeMessage.Text = "Welcome to XPDL VALIDATOR, make click in 'Search' button and  select a XPDL file from your computer, them make click 'Load XPDL file' button to validate. ";
                     txtWelcomeMessage.BackColor = Color.WhiteSmoke;
 
                     frmConfiguracion.ShowDialog();
@@ -51,7 +51,7 @@ namespace XpdlValidator.View
             }
             catch (Exception ex)
             {
-                txtWelcomeMessage.Text = "Error al cargar el archivo .XPDL, detalle error : " + ex.Message;
+                txtWelcomeMessage.Text = "an error occurred please try again, Error detail : " + ex.Message;
                 txtWelcomeMessage.BackColor = Color.FromArgb(255, 192, 192);
             }
         }
