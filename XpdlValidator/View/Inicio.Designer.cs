@@ -118,7 +118,7 @@
             this.MinimizeBox = false;
             this.Name = "Inicio";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "XPDL VALIDATOR V. 1.0 By @marztres - Inicio";
+            this.Text = "XPDL VALIDATOR V. 1.0 By @marztres - Home";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ResumeLayout(false);
             this.PerformLayout();
