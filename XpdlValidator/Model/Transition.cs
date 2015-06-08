@@ -1,7 +1,11 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
+    /// <summary>
+    /// Model of a BPMN Transition
+    /// </summary>
     public class Transition
     {
         public string To { 
@@ -17,7 +21,7 @@ namespace XpdlValidator.Model
                             }
                          }
 
-        private XElement XElementTransition { get; set; } //XElement de la transición.
+        private XElement XElementTransition { get; set; } // XElement of the transition
 
         public Transition(XElement xElementTransition)
         {

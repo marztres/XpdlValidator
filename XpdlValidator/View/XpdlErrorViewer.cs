@@ -103,7 +103,11 @@ namespace XpdlValidator.View
 
             RuleExceptionDetail(ruleException);
         }
-
+        
+        /// <summary>
+        /// Get details from a BPMN rule exception
+        /// </summary>
+        /// <param name="ruleException"> BPMN Object rule exception </param>
         private void RuleExceptionDetail(RuleException ruleException)
         {            
             XmlDocument xmlDocument = new XmlDocument();            

@@ -2,6 +2,9 @@
 
 namespace XpdlValidator.Model
 {
+    /// <summary>
+    /// Model of a BPMN message Flow
+    /// </summary>
     public class MessageFlow
     {
         public string Target
@@ -19,7 +22,7 @@ namespace XpdlValidator.Model
             }
         }
 
-        private XElement XElementMessageFlow { get; set; } //XElement del MessageFlow.
+        private XElement XElementMessageFlow { get; set; } //XElement MessageFlow.
 
         public MessageFlow(XElement xElementMessageFlow)
         {

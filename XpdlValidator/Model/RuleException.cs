@@ -4,9 +4,12 @@ using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
+    /// <summary>
+    /// Model of an BPMN rule Exception
+    /// </summary>
     public class RuleException : ApplicationException
     {
-        public XElement XElement { get; private set; } //XElement del error.
+        public XElement XElement { get; private set; } //XElement reference.
 
         public string Id
         {
@@ -40,6 +43,13 @@ namespace XpdlValidator.Model
             this.TypeActivity = typeActivity; 
         }
 
+        /// <summary>
+        /// Get the absolute XPath to a given XElement
+        /// Took from 
+        /// the code was got from http://stackoverflow.com/questions/451950/get-the-xpath-to-an-xelement
+        /// </summary>
+        /// <param name="element"> XElement reference with error </param>
+        /// <returns> XPath of the element </returns>
         private string GetPath(XElement element)
         {
             return string.Join("/", element.AncestorsAndSelf().Reverse()

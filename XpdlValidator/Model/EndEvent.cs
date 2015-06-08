@@ -3,6 +3,9 @@ using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
+    /// <summary>
+    /// Model of BPMN End Event
+    /// </summary>
     public class EndEvent : Event
     {
         public EndEvent(XElement xElementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)

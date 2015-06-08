@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace XpdlValidator.Model
 {
+    /// <summary>
+    /// Model of a BPMN Task 
+    /// </summary>
     public class TaskEvent : Event
     {
         public TaskEvent(XElement elementActivity, XDocument xmlXDocument, IEnumerable<Transition> transitions, IEnumerable<Activity> activities)
             : base(elementActivity, xmlXDocument, transitions,activities)
         {
-            this.TypeActivity = "Task";
-            GetProceso();
+            this.TypeActivity = "Task";            
         }
 
         public override IEnumerable<RuleException> Validate()
@@ -23,8 +22,8 @@ namespace XpdlValidator.Model
 
             try
             {
-                if (base.ExistStartOrEndEvent())
-                    if (!(base.HasOutgoinSecuenceFlow()))
+                if (ExistStartOrEndEvent())
+                    if (!(HasOutgoingSecuenceFlow()))
                         rulesExceptions.Add(new RuleException("This activity must have an outgoing sequence flow", XElementActivity, TypeActivity));
                 
                 IsActivityNameUnique();
@@ -41,22 +40,20 @@ namespace XpdlValidator.Model
             return rulesExceptions;
         }
 
+        /// <summary>
+        /// Look for duplicate name in the same process 
+        /// Raise Exception  if It was found at least  one.
+        /// </summary>
         private void IsActivityNameUnique() 
         {
-            IEnumerable<Activity> duplicateActivitiesName = base.Activities.Where(x => x.Id != this.Id && x.GetType() == typeof(TaskEvent) && !string.IsNullOrEmpty(x.Name) && x.Name == Name);
+            IEnumerable<Activity> duplicateActivitiesName = Activities.Where(x => x.Id != this.Id && x.GetType() == typeof(TaskEvent) && !string.IsNullOrEmpty(x.Name) && x.Name == Name);
 
             const string errorMessage = " Two activities in the same process should not have the same name.";
-            if (duplicateActivitiesName.Count() !=0)
+            var activitiesName = duplicateActivitiesName as Activity[] ?? duplicateActivitiesName.ToArray();
+            if (activitiesName.Any(activity => activity.IdProcess == IdProcess))
             {
                 throw new ApplicationException(errorMessage);
             }
-        
-        }
-
-        private void GetProceso()
-        {
-            var ancentros = base.XElementActivity.Ancestors().First(x=> x.Name.LocalName == "Process");
-        }
-
+        }    
     }
 }
